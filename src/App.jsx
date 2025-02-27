@@ -5,12 +5,13 @@ import Feedback from './components/Feedback/Feedback'
 import Options from './components/Options/Options'
 import Notification from './components/Notification/Notification'
 
-function App() {
+export default function App() {
   const [count, setCount] = useState({
     good: 0,
     neutral: 0,
     bad: 0
-  })
+  });
+
   const updateFeedback = feedbackType => {
     if (feedbackType === 'good') {
       setCount({
@@ -28,7 +29,7 @@ function App() {
         bad: count.bad + 1
       });
     }
-  }
+  };
 
   const resetFeedback = () => {
     setCount({
@@ -39,7 +40,7 @@ function App() {
   };
 
   const totalFeedback = count.good + count.neutral + count.bad;
-  const positiveFeedback = Math.round((count.good / totalFeedback) * 100)
+  const positiveFeedback = Math.round((count.good / totalFeedback) * 100);
 
 
   return (
@@ -50,5 +51,3 @@ function App() {
     </>
   )
 }
-
-export default App
