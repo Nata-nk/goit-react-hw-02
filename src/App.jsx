@@ -7,14 +7,21 @@ import { useState, useEffect } from "react";
 import './App.css'
 
 export default function App() {
-  const [count, setCount] = useState(() =>
-    JSON.parse(localStorage.getItem("feedback-state")) || 
-  {
+  const [count, setCount] = useState(() => {
+
+   const savedCount = localStorage.getItem("feedback-state");
+
+  if (savedCount !== null) {
+    return JSON.parse(savedCount);
+  }
+
+ return {
     good: 0,
     neutral: 0,
     bad: 0
-  }
-);
+  };
+
+});
 
   const totalFeedback = count.good + count.neutral + count.bad;
   const positiveFeedback = Math.round((count.good / totalFeedback) * 100);
