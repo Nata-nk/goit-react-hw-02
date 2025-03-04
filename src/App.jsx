@@ -6,63 +6,34 @@ import { useState, useEffect } from "react";
 
 import './App.css'
 
-
 export default function App() {
-
-  const [count, setCount] = useState({
+  const [count, setCount] = useState(() =>
+    JSON.parse(localStorage.getItem("feedback-state")) || 
+  {
     good: 0,
     neutral: 0,
     bad: 0
-  });
-
-useEffect(() => {
-
-if (totalFeedback === 0) {
-  return
-}
-    localStorage.setItem("feedback-state", JSON.stringify(count))
-}
-, [count]);
-
-
-
-
-  const updateFeedback = feedbackType => {
-
-    if (feedbackType === 'good') {
-      setCount({
-        ...count,
-        good: count.good + 1
-      });
-
-    } else if (feedbackType === 'neutral') {
-      setCount({
-        ...count,
-        neutral: count.neutral + 1
-      });
-
-    } else {
-      setCount({
-        ...count,
-        bad: count.bad + 1
-      });
-    }
-  };
-
-  const resetFeedback = () => {
-    setCount({
-      good: 0,
-      neutral: 0,
-      bad: 0
-    });
-
-localStorage.removeItem("feedback-state");
-
-  };
+  }
+);
 
   const totalFeedback = count.good + count.neutral + count.bad;
   const positiveFeedback = Math.round((count.good / totalFeedback) * 100);
 
+  useEffect(() => {
+    localStorage.setItem("feedback-state", JSON.stringify(count));
+  }, [count]);
+
+  const updateFeedback = (feedbackType) => {
+    setCount((prevCount) => ({
+      ...prevCount,
+      [feedbackType]: prevCount[feedbackType] + 1,
+    }));
+  };
+
+  const resetFeedback = () => {
+    setCount({ good: 0, neutral: 0, bad: 0 });
+    localStorage.removeItem("feedback-state");
+  };
 
   return (
     <>
@@ -70,5 +41,5 @@ localStorage.removeItem("feedback-state");
       <Options reset={resetFeedback} totalFeedback={totalFeedback} onClick={updateFeedback} />
       {totalFeedback === 0 ? <Notification /> : <Feedback totalFeedback={totalFeedback} positiveFeedback={positiveFeedback} good={count.good} neutral={count.neutral} bad={count.bad} />}
     </>
-  )
+  );
 }
